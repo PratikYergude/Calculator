@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Calculator</title>
+    <style>
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 100px;
+            font-size: 20px;
+        }
+        .display {
+            width: 200px;
+            height: 30px;
+            margin-bottom: 10px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        .button {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input class="display" type="text" disabled>
+        <div class="buttons">
+            <button class="button" value="1">1</button>
+            <button class="button" value="2">2</button>
+            <button class="button" value="3">3</button>
+            <button class="button operator" value="+">+</button>
+            <button class="button" value="4">4</button>
+            <button class="button" value="5">5</button>
+            <button class="button" value="6">6</button>
+            <button class="button operator" value="-">-</button>
+            <button class="button" value="7">7</button>
+            <button class="button" value="8">8</button>
+            <button class="button" value="9">9</button>
+            <button class="button operator" value="*">*</button>
+            <button class="button" value="0">0</button>
+            <button class="button" id="clear">C</button>
+            <button class="button" id="equals">=</button>
+            <button class="button operator" value="/">/</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.querySelector('.display');
+        const buttons = Array.from(document.querySelectorAll('.button'));
+        let currentNumber = '';
+        let previousNumber = '';
+        let currentOperator = null;
+        let shouldResetDisplay = false;
+
+        buttons.map( button => {
+            button.addEventListener('click', (e) => {
+                const buttonText = e.target.innerText;
+                if(buttonText === 'C') {
+                    currentNumber = '';
+                    previousNumber = '';
+                    currentOperator = null;
+                    shouldResetDisplay = true;
+                } else if(buttonText === '+' || buttonText === '-' || buttonText === '*' || buttonText === '/') {
+                    currentOperator = buttonText;
+                    previousNumber = currentNumber;
+                    currentNumber = '';
+                } else if(buttonText === '=') {
+                    if(currentOperator === null || previousNumber === '') return;
+                    let computation;
+                    const prev = parseFloat(previousNumber);
+                    const current = parseFloat(currentNumber);
+                    switch(currentOperator) {
+                        case '+':
+                            computation = prev + current;
+                            break;
+                        case '-':
+                            computation = prev - current;
+                            break;
+                        case '*':
+                            computation = prev * current;
+                            break;
+                        case '/':
+                            computation = prev / current;
+                            break;
+                    }
+                    currentNumber = computation;
+                    currentOperator = null
